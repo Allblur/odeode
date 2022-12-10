@@ -1,0 +1,31 @@
+{
+  "name": "odeode",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Allblur/odeode.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Allblur/odeode/issues"
+  },
+  "homepage": "https://github.com/Allblur/odeode#readme",
+  "dependencies": {
+    "chatgpt": "^2.0.3",
+    "compression": "^1.7.4",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "nunjucks": "^3.2.3",
+    "p-timeout": "^6.0.0",
+    "qrcode-terminal": "^0.12.0",
+    "wechaty": "^1.20.2",
+    "wechaty-puppet-wechat": "^1.18.4"
+  }
+}
