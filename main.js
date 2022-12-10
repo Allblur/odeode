@@ -36,7 +36,7 @@ router.get("/", async (req, res) => {
 router.post("/api", async (req, res) => {
   let response
   // ensure the API is properly authenticated
-  // console.log(req.get("authorization"))
+  console.log(req.get("authorization"))
   try {
     const msg = req.body.msg
     const api = new ChatGPTAPI({
@@ -46,7 +46,7 @@ router.post("/api", async (req, res) => {
     // send a message and wait for the response
     response = await api.sendMessage(msg)
   } catch(err) {
-    response = "Ooop"
+    response = "Ooop：" + err
   }
 
   res.json({
@@ -69,4 +69,4 @@ app.use(helmet())
 app.use(express.json())
 app.use("/", router)
 
-app.listen(3000, () => console.log(`Example app listening on port 3000!`))
+app.listen(3000, () => console.log(`app listening on port 3000!`))
