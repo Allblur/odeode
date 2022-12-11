@@ -1,5 +1,6 @@
 // import path from 'path'
 import express from 'express'
+import cors from 'cors
 // import nunjucks from 'nunjucks'
 import compression from 'compression'
 import helmet from 'helmet'
@@ -98,6 +99,7 @@ router.post("/send", async (req, res) => {
 // app.use('/statics', express.static('statics'))
 app.use(compression())
 app.use(helmet())
+app.use(cors())
 //开启json解析
 app.use(express.json())
 app.use("/", router)
