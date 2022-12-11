@@ -3,6 +3,7 @@ import express from 'express'
 // import nunjucks from 'nunjucks'
 import compression from 'compression'
 import helmet from 'helmet'
+import { Configuration, OpenAIApi } from "openai"
 import { ChatGPTAPI } from 'chatgpt'
 
 const router = express.Router()
@@ -45,6 +46,38 @@ router.post("/api", async (req, res) => {
     await api.ensureAuth()
     // send a message and wait for the response
     response = await api.sendMessage(msg)
+  } catch(err) {
+    response = "Ooop：" + err
+  }
+
+  res.json({
+    code: 200,
+    msg: "success",
+    data: {
+      txt: response
+    }
+  })
+})
+
+router.post("/send", async (req, res) => {
+  let response
+  try {
+    const msg = req.body.msg
+    const apiKey = req.body.key
+    const configuration = new Configuration({
+      apiKey: apiKey,
+    })
+    const openai = new OpenAIApi(configuration)
+    const completion = await openai.createCompletion({
+      model: "text-davinci-002",
+      prompt: msg,
+      temperature: 0.7,
+      max_tokens: 1024,
+      top_p: 1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+    response = completion.data.choices[0].text
   } catch(err) {
     response = "Ooop：" + err
   }
