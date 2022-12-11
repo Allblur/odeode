@@ -1,6 +1,6 @@
 // import path from 'path'
 import express from 'express'
-import cors from 'cors
+import cors from 'cors'
 // import nunjucks from 'nunjucks'
 import compression from 'compression'
 import helmet from 'helmet'
