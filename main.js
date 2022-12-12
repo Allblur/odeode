@@ -16,7 +16,9 @@ router.post("/conversation", async (req, res) => {
   console.log(req.get("authorization"))
   try {
     const api = new ChatGPTAPI({
-      sessionToken: req.body.key
+      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+      sessionToken: req.body.key,
+      clearanceToken: req.body.clearanceToken
     })
     await api.ensureAuth()
     // send a message and wait for the response
