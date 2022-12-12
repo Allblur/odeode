@@ -1,6 +1,6 @@
 // import path from 'path'
 import express from 'express'
-import cors from 'cors'
+// import cors from 'cors'
 // import nunjucks from 'nunjucks'
 import compression from 'compression'
 import helmet from 'helmet'
@@ -9,44 +9,18 @@ import { ChatGPTAPI } from 'chatgpt'
 
 const router = express.Router()
 const app = express()
-// const ChatGPT = require('chatgpt')
-const token = ''
-router.get("/", async (req, res) => {
-  res.set('Content-Type', 'text/html')
-  res.send(
-    `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="renderer" content="webkit">
-        <meta name="viewport" content="width=device-width,initial-scale=1.0">
-        <style>
-          *{margin:0px;padding:0px}
-          body{padding:10px}
-        </style>
-      </head>
-      <body>
-        <div id="app">Hello Ode</div>
-      </body>
-    </html>
-    `
-  )
-})
 
-router.post("/api", async (req, res) => {
+router.post("/conversation", async (req, res) => {
   let response
   // ensure the API is properly authenticated
   console.log(req.get("authorization"))
   try {
-    const msg = req.body.msg
     const api = new ChatGPTAPI({
-      sessionToken: req.get('authorization').split(' ')[1]
+      sessionToken: req.body.key
     })
     await api.ensureAuth()
     // send a message and wait for the response
-    response = await api.sendMessage(msg)
+    response = await api.sendMessage(req.body.msg || '')
   } catch(err) {
     response = "Ooop：" + err
   }
@@ -60,18 +34,16 @@ router.post("/api", async (req, res) => {
   })
 })
 
-router.post("/send", async (req, res) => {
+router.post("/open", async (req, res) => {
   let response
   try {
-    const msg = req.body.msg
-    const apiKey = req.body.key
     const configuration = new Configuration({
-      apiKey: apiKey,
+      apiKey: req.body.key,
     })
     const openai = new OpenAIApi(configuration)
     const completion = await openai.createCompletion({
       model: "text-davinci-003",
-      prompt: msg,
+      prompt: req.body.msg || '',
       temperature: 0.7,
       max_tokens: 1024,
       top_p: 1,
@@ -99,9 +71,33 @@ router.post("/send", async (req, res) => {
 // app.use('/statics', express.static('statics'))
 app.use(compression())
 app.use(helmet())
-app.use(cors())
+// app.use(cors())
 //开启json解析
 app.use(express.json())
-app.use("/", router)
+app.use("/api", router)
+
+app.get("/", async (req, res) => {
+  res.type('html')
+  res.send(
+    `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="renderer" content="webkit">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0">
+        <style>
+          *{margin:0px;padding:0px}
+          body{padding:10px}
+        </style>
+      </head>
+      <body>
+        <div id="app">Hello Ode</div>
+      </body>
+    </html>
+    `
+  )
+})
 
 app.listen(3000, () => console.log(`app listening on port 3000!`))
