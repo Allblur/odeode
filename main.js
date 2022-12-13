@@ -74,7 +74,6 @@ router.post("/open", async (req, res) => {
 app.use(compression())
 app.use(helmet())
 // app.use(cors())
-//开启json解析
 app.use(express.json())
 app.use("/api", router)
 
