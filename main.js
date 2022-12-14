@@ -13,7 +13,7 @@ const app = express()
 router.post("/conversation", async (req, res) => {
   let response
   // ensure the API is properly authenticated
-  console.log(req.get("authorization"))
+//   console.log(req.get("authorization"))
   try {
 //     const api = new ChatGPTAPI({
 //       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
@@ -50,15 +50,15 @@ router.post("/open", async (req, res) => {
       apiKey: req.body.key,
     })
     const openai = new OpenAIApi(configuration)
-    const completion = await openai.createCompletion({
+    const completion = await openai.createCompletion(Object.assign({}, {
       model: "text-davinci-003",
-      prompt: req.body.msg || '',
+      prompt: '',
       temperature: 0.7,
-      max_tokens: 1024,
+      max_tokens: 2048,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,
-    });
+    }, req.body.params || {}));
     response = completion.data.choices[0].text
   } catch(err) {
     response = "Ooop：" + err
