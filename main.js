@@ -4,8 +4,8 @@ import express from 'express'
 // import nunjucks from 'nunjucks'
 import compression from 'compression'
 import helmet from 'helmet'
-import { Configuration, OpenAIApi, getOpenAIAuth } from "openai"
-import { ChatGPTAPI } from 'chatgpt'
+import { Configuration, OpenAIApi } from "openai"
+import { ChatGPTAPI, getOpenAIAuth } from 'chatgpt'
 
 const router = express.Router()
 const app = express()
