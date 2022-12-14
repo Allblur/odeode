@@ -4,7 +4,7 @@ import express from 'express'
 // import nunjucks from 'nunjucks'
 import compression from 'compression'
 import helmet from 'helmet'
-import { Configuration, OpenAIApi } from "openai"
+import { Configuration, OpenAIApi, getOpenAIAuth } from "openai"
 import { ChatGPTAPI } from 'chatgpt'
 
 const router = express.Router()
@@ -15,11 +15,18 @@ router.post("/conversation", async (req, res) => {
   // ensure the API is properly authenticated
   console.log(req.get("authorization"))
   try {
-    const api = new ChatGPTAPI({
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-      sessionToken: req.body.key,
-      clearanceToken: req.body.clearanceToken
+//     const api = new ChatGPTAPI({
+//       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+//       sessionToken: req.body.key,
+//       clearanceToken: req.body.clearanceToken
+//     })
+//     await api.ensureAuth()
+    const openAIAuth = await getOpenAIAuth({
+      email: process.env.OPENAI_EMAIL,
+      password: process.env.OPENAI_PW
     })
+
+    const api = new ChatGPTAPI({ ...openAIAuth })
     await api.ensureAuth()
     // send a message and wait for the response
     response = await api.sendMessage(req.body.msg || '')
